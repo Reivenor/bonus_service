@@ -1,0 +1,5 @@
+CREATE TABLE clients(
+  card_id INT UNIQUE NOT NULL,
+  balance BIGINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (card_id)
+)
