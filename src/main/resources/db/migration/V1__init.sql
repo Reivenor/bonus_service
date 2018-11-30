@@ -1,5 +1,19 @@
-CREATE TABLE clients(
-  card_id INT UNIQUE NOT NULL,
+CREATE TABLE client(
+  cardId INT UNIQUE NOT NULL,
   balance BIGINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (card_id)
-)
+  PRIMARY KEY (cardId)
+);
+
+CREATE TABLE bill(
+  billId INT UNIQUE NOT NULL,
+  cardId INT UNIQUE NOT NULL,
+  sum BIGINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (cardId)
+);
+
+CREATE TABLE bill_position(
+  billId INT UNIQUE NOT NULL,
+  sum BIGINT NOT NULL DEFAULT 0
+);
+
+ALTER TABLE bill Add CONSTRAINT bill_client FOREIGN KEY (cardId) REFERENCES client;

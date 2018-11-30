@@ -19,8 +19,7 @@ public class Client {
 
     private Long balance;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false)
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Bill> bills;
 }

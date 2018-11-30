@@ -39,7 +39,7 @@ public class BonusControlService {
 
         Bill billToSave = Bill.builder()
                 .billId(newBill.getBillId())
-                .cardId(newBill.getCardId())
+                .client(client)
                 .sum(newBill.getSum())
                 .positions(newBill.getPositions()
                         .stream()
