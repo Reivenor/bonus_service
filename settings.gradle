@@ -1,1 +1,4 @@
 rootProject.name = 'bonus-service'
+include 'bonus'
+include 'dispatcher'
+
