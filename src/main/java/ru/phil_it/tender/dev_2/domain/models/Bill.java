@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -19,14 +16,21 @@ import java.util.List;
 @Builder
 public class Bill {
     @Id
-    private Integer  billId;
+    @Column(name = "bill_id")
+    private Integer  Id;
 
-    private Integer cardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     private Long sum;
 
     @JsonIgnore
     @ElementCollection
+    @CollectionTable(
+            name = "bill_positions",
+            joinColumns = @JoinColumn(name = "bill_id", referencedColumnName = "bill_id")
+    )
     private List<BillPosition> positions;
 
 }

@@ -17,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BillPosition implements Serializable{
-    private Integer billId;
+
 
     private Long sum;
 }

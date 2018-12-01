@@ -4,9 +4,6 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
-		maven {
-			url "https://vc-bds002.vimpelcom.global:8443/repository/maven_all_/"
-		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -24,15 +21,9 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://vc-bds002.vimpelcom.global:8443/repository/maven_all_/"
-    }
 }
 
-def flywayVersion = '5.2.3'
-
 dependencies {
-    compile "org.flywaydb:flyway-core:${flywayVersion}"
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	runtimeOnly('org.postgresql:postgresql')
