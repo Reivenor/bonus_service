@@ -12,14 +12,15 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
     @Id
-    private Integer cardId;
+    private Integer Id;
 
     private Long balance;
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+    //@JoinColumn(name = "bill_id", nullable = false)
     @JsonIgnore
     private List<Bill> bills;
 }

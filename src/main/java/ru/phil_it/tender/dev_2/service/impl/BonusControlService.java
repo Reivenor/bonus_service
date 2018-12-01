@@ -38,14 +38,14 @@ public class BonusControlService {
                 .orElseThrow(() -> new CardNumberNotFound(newBill.getCardId(), log));
 
         Bill billToSave = Bill.builder()
-                .billId(newBill.getBillId())
-                .client(client)
+                .Id(newBill.getBillId())
+                .client(clientRepository.getOne(newBill.getCardId()))
                 .sum(newBill.getSum())
                 .positions(newBill.getPositions()
                         .stream()
                         .map(value -> {
                             billPositionsSum.addAndGet(value);
-                            return new BillPosition(newBill.getBillId(), value);
+                            return new BillPosition(value);
                         }).collect(Collectors.toList()))
                 .build();
 
@@ -57,7 +57,7 @@ public class BonusControlService {
         client.setBalance(client.getBalance() - pointsToRemove);
         log.info("Current client balance " + client.getBalance());
         client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
-        log.info("Client " + client.getCardId() + " balance " + client.getBalance());
+        log.info("Client " + client.getId() + " balance " + client.getBalance());
         clientRepository.save(client);
 
     }

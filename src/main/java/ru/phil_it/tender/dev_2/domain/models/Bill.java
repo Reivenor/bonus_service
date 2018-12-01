@@ -16,16 +16,21 @@ import java.util.List;
 @Builder
 public class Bill {
     @Id
-    private Integer  billId;
+    @Column(name = "bill_id")
+    private Integer  Id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cardId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     private Long sum;
 
     @JsonIgnore
     @ElementCollection
+    @CollectionTable(
+            name = "bill_positions",
+            joinColumns = @JoinColumn(name = "bill_id", referencedColumnName = "bill_id")
+    )
     private List<BillPosition> positions;
 
 }
