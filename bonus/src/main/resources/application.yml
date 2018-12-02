@@ -2,6 +2,8 @@ server:
   port: 9000
 
 spring:
+  application:
+    name: bonus
   datasource:
     url: jdbc:postgresql://localhost:5432/bonus
     username: postgres
