@@ -67,7 +67,13 @@ public class BonusControlService {
          log.info("Removed points count " + pointsToRemove);
         if (newClientPoints < 0) throw new NegativeBalance(newBill.getCardId(), log);
 
+        /*TODO bill save не работает???
+        т.к. не работает -  нельзя проверить новую логику перерасчета баллов
+        и фейлится тест с дублированием id чека (при добавлении двух чеков с одним id
+        должен кидаться эксепшн, чего он не делает
+        */
         billRepository.save(billToSave);
+
         log.info("New bill saved");
         log.info("Current client balance " + client.getBalance());
 
