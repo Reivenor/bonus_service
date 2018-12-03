@@ -25,22 +25,13 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	implementation('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-web'){
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
 	runtimeOnly('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 }
 
-/*flyway {
-    url = 'jdbc:h2:mem:mydb'
-    user = 'myUsr'
-    password = 'mySecretPwd'
-    schemas = ['schema1', 'schema2', 'schema3']
-    placeholders = [
-            'keyABC': 'valueXYZ',
-            'otherplaceholder': 'value123'
-    ]
-    // Include your custom configuration here in addition to any default ones you want included
-    configurations = [ 'compile', 'flywayMigration' ]
-}*/

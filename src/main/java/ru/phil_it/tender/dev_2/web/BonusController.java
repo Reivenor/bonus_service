@@ -17,7 +17,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 @Slf4j
 @RestController
-@RequestMapping("/bonus")
+@RequestMapping(value = "/bonus")
 public class BonusController {
     private final BonusControlService service;
 
@@ -39,20 +39,5 @@ public class BonusController {
             throws CardNumberNotFound {
         log.info("Asked balance for card " + cardId);
         return new ResponseEntity<Object>(service.getCardBalance(cardId), HttpStatus.OK);
-    }
-
-    //TODO add health check with actuator
-
-    //Скорее всего эта хуета работает не так и эти эндпоинты чисто потестить
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addNewBill(@RequestBody NewBill newBill){
-        throw new NotImplementedException();
-    }
-
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> takeBonus(){
-        throw new NotImplementedException();
     }
 }

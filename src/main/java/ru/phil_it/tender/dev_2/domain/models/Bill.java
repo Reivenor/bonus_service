@@ -1,10 +1,13 @@
 package ru.phil_it.tender.dev_2.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +17,9 @@ import java.util.List;
 @Entity
 @Table(name = "bill")
 @Builder
-public class Bill {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Bill implements Serializable{
     @Id
     @Column(name = "bill_id")
     private Integer  Id;
