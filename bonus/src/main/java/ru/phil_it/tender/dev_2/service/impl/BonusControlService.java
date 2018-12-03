@@ -16,6 +16,8 @@ import ru.phil_it.tender.dev_2.service.impl.exceptions.BillSum;
 import ru.phil_it.tender.dev_2.service.impl.exceptions.CardNumberNotFound;
 import ru.phil_it.tender.dev_2.service.impl.exceptions.NegativeBalance;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -58,19 +60,32 @@ public class BonusControlService {
                 .build();
 
         //TODO experimental
-        Long pointsToRemove = (billPositionsSum.get() - billToSave.getSum()) / 10;
+        long pointsToRemove = (billPositionsSum.get() - billToSave.getSum()) / 10;
         if (pointsToRemove < 0) throw new BillSum(newBill.getCardId(), log);
 
         Long newClientPoints = client.getBalance() - pointsToRemove;
          log.info("Removed points count " + pointsToRemove);
         if (newClientPoints < 0) throw new NegativeBalance(newBill.getCardId(), log);
-        client.setBalance(newClientPoints);
 
         billRepository.save(billToSave);
         log.info("New bill saved");
-
         log.info("Current client balance " + client.getBalance());
-        client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
+
+        client = clientRepository.findById(newBill.getCardId())
+                .orElseThrow(() -> new CardNumberNotFound(newBill.getCardId(), log));
+
+        long totalClientSum = sumClientBills(client);
+        long totalClientPositionsSum = sumClientBillsSum(client);
+        long totalRemovedPoints = totalClientSum - totalClientPositionsSum / 10;
+        long totalClientPoints = computeBonusPointsBySum(totalClientSum);
+        Long ResultPoints = totalClientPoints - totalRemovedPoints;
+
+        log.info("Client total sum " + totalClientSum);
+        log.info("Client total sum of positions " + totalClientPositionsSum);
+        log.info("Client total points " + totalClientPositionsSum);
+        log.info("Client total removed points " + totalClientPositionsSum);
+
+        client.setBalance(ResultPoints);
         log.info("Client " + client.getId() + " balance " + client.getBalance());
 
         billRepository.save(billToSave);
@@ -115,6 +130,16 @@ public class BonusControlService {
         return client.getBills()
                 .stream()
                 .map(Bill::getSum)
+                .reduce((billSum, accumulator) -> accumulator + billSum)
+                .orElseGet(() -> 0L);
+    }
+
+    private Long sumClientBillsSum(Client client){
+        return client.getBills()
+                .stream()
+                .map(Bill::getPositions)
+                .flatMap(Collection::stream)
+                .map(BillPosition::getSum)
                 .reduce((billSum, accumulator) -> accumulator + billSum)
                 .orElseGet(() -> 0L);
     }
