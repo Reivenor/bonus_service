@@ -28,11 +28,11 @@ repositories {
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')
     compile('org.springframework.boot:spring-boot-starter-web')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     compileOnly('org.projectlombok:lombok')
+    compile project(':bonus')
 }
 
 dependencyManagement {
