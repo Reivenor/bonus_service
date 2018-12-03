@@ -33,9 +33,10 @@ public class DispatcherController {
 //        return this.restTemplate.postForEntity("http://bonus/bonus", newBill, Object.class);
 //    }
 
-    @GetMapping(value = "/{cardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "bonus/{cardId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getBonusBalance(@PathVariable("cardId") Integer cardId) {
-        return this.restTemplate.getForEntity("http://bonus/bonus/" + cardId, Object.class);
+        String uri = "http://bonus/bonus/" + cardId;
+        return this.restTemplate.getForEntity(uri, Object.class);
     }
 
 }
