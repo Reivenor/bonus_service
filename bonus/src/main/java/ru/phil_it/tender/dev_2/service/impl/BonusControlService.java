@@ -11,7 +11,10 @@ import ru.phil_it.tender.dev_2.domain.dto.NewBill;
 import ru.phil_it.tender.dev_2.domain.models.Bill;
 import ru.phil_it.tender.dev_2.domain.models.BillPosition;
 import ru.phil_it.tender.dev_2.domain.models.Client;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.BillAlreadyExists;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.BillSum;
 import ru.phil_it.tender.dev_2.service.impl.exceptions.CardNumberNotFound;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.NegativeBalance;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -33,8 +36,11 @@ public class BonusControlService {
     }
 
     @Transactional(readOnly = true)
-    public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound {
+    public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound, NegativeBalance, BillAlreadyExists, BillSum {
         AtomicLong billPositionsSum = new AtomicLong(0L);
+
+        if (billRepository.findById(newBill.getBillId()).isPresent())
+            throw new BillAlreadyExists(newBill.getBillId(), log);
 
         Client client =  clientRepository.findById(newBill.getCardId())
                 .orElseThrow(() -> new CardNumberNotFound(newBill.getCardId(), log));
@@ -51,19 +57,25 @@ public class BonusControlService {
                         }).collect(Collectors.toList()))
                 .build();
 
-        billRepository.save(billToSave);
-       // log.info("New bill saved");
         //TODO experimental
         Long pointsToRemove = (billPositionsSum.get() - billToSave.getSum()) / 10;
-       // log.info("Removed points count " + pointsToRemove);
-        client.setBalance(client.getBalance() - pointsToRemove);
+        if (pointsToRemove < 0) throw new BillSum(newBill.getCardId(), log);
+
+        Long newClientPoints = client.getBalance() - pointsToRemove;
+        // log.info("Removed points count " + pointsToRemove);
+        if (newClientPoints < 0) throw new NegativeBalance(newBill.getCardId(), log);
+        client.setBalance(newClientPoints);
+
         //log.info("Current client balance " + client.getBalance());
         client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
         //log.info("Client " + client.getId() + " balance " + client.getBalance());
+
+        billRepository.save(billToSave);
+       // log.info("New bill saved");
+
         clientRepository.save(client);
 
         return client;
-
     }
 
 

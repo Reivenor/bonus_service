@@ -13,7 +13,10 @@ import ru.phil_it.tender.dev_2.domain.ClientRepository;
 import ru.phil_it.tender.dev_2.domain.dto.NewBill;
 import ru.phil_it.tender.dev_2.domain.models.Client;
 import ru.phil_it.tender.dev_2.service.impl.BonusControlService;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.BillAlreadyExists;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.BillSum;
 import ru.phil_it.tender.dev_2.service.impl.exceptions.CardNumberNotFound;
+import ru.phil_it.tender.dev_2.service.impl.exceptions.NegativeBalance;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -55,7 +58,7 @@ public class BonusServiceTest {
     }
 
     @Test
-    public void  addingPointTest() throws CardNumberNotFound {
+    public void  addingPointTest() throws CardNumberNotFound, NegativeBalance, BillSum, BillAlreadyExists {
 
 
         NewBill input = new NewBill(
