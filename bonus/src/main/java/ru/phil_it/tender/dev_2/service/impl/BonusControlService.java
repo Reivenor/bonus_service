@@ -62,16 +62,19 @@ public class BonusControlService {
         if (pointsToRemove < 0) throw new BillSum(newBill.getCardId(), log);
 
         Long newClientPoints = client.getBalance() - pointsToRemove;
-        // log.info("Removed points count " + pointsToRemove);
+         log.info("Removed points count " + pointsToRemove);
         if (newClientPoints < 0) throw new NegativeBalance(newBill.getCardId(), log);
         client.setBalance(newClientPoints);
 
-        //log.info("Current client balance " + client.getBalance());
+        billRepository.save(billToSave);
+        log.info("New bill saved");
+
+        log.info("Current client balance " + client.getBalance());
         client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
-        //log.info("Client " + client.getId() + " balance " + client.getBalance());
+        log.info("Client " + client.getId() + " balance " + client.getBalance());
 
         billRepository.save(billToSave);
-       // log.info("New bill saved");
+        log.info("New bill saved");
 
         clientRepository.save(client);
 

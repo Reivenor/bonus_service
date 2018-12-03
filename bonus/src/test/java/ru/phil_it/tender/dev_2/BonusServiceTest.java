@@ -1,5 +1,6 @@
 package ru.phil_it.tender.dev_2;
 
+import net.bytebuddy.asm.Advice;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,12 +46,19 @@ public class BonusServiceTest {
     @Before
     public void setup(){
         Client dummyClient = new Client(1, 200L);
+        Client badClient = new Client(2, -200L);
 
-        when(clientRepositoryMock.findById(anyInt()))
+        when(clientRepositoryMock.findById(1))
                 .thenReturn(Optional.ofNullable(dummyClient));
 
-        when(clientRepositoryMock.getOne(anyInt()))
+        when(clientRepositoryMock.getOne(1))
                 .thenReturn(dummyClient);
+
+        when(clientRepositoryMock.findById(2))
+                .thenReturn(Optional.ofNullable(badClient));
+
+        when(clientRepositoryMock.getOne(2))
+                .thenReturn(badClient);
 
         MockitoAnnotations.initMocks(this);
 
@@ -64,7 +72,7 @@ public class BonusServiceTest {
         NewBill input = new NewBill(
                 1,
                 100,
-                500L,
+                400L,
                 Arrays.asList(
                         100L,
                         100L,
@@ -74,8 +82,69 @@ public class BonusServiceTest {
         );
 
         Client result =service.correctBonusPoints(input);
-        Client expected = new Client(1, 220L);
+        Client expected = new Client(1, 190L);
         assertEquals(expected.getBalance(), result.getBalance());
+    }
+
+    @Test(expected = NegativeBalance.class)
+    public void negativeBalance() throws BillSum, CardNumberNotFound, NegativeBalance, BillAlreadyExists {
+        NewBill input = new NewBill(
+                2,
+                100,
+                500L,
+                Arrays.asList(
+                        100L,
+                        100L,
+                        200L,
+                        100L
+                )
+        );
+        service.correctBonusPoints(input);
+    }
+
+    @Test(expected = CardNumberNotFound.class)
+    public void negativeCardNumberNotFound() throws BillSum, CardNumberNotFound, NegativeBalance, BillAlreadyExists {
+        NewBill input = new NewBill(
+                10,
+                100,
+                500L,
+                Arrays.asList(
+                        100L,
+                        100L,
+                        200L,
+                        100L
+                )
+        );
+        service.correctBonusPoints(input);
+    }
+
+    @Test(expected = BillAlreadyExists.class)
+    public void negativeBillAlreadyExists() throws BillSum, CardNumberNotFound, NegativeBalance, BillAlreadyExists {
+        NewBill input1 = new NewBill(
+                1,
+                100,
+                500L,
+                Arrays.asList(
+                        100L,
+                        100L,
+                        200L,
+                        100L
+                )
+        );
+
+        NewBill input2 = new NewBill(
+                1,
+                100,
+                500L,
+                Arrays.asList(
+                        100L,
+                        100L,
+                        200L,
+                        100L
+                )
+        );
+        service.correctBonusPoints(input1);
+        service.correctBonusPoints(input2);
     }
 
     @Test
