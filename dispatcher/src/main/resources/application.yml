@@ -1,3 +1,7 @@
+spring:
+  application:
+    name: dispatcher
+
 server:
   port: 8888
 
@@ -5,5 +9,5 @@ bonus:
   ribbon:
     eureka:
       enabled: false
-    listOfServers: localhost:9000,localhost:9092,localhost:9999
+    listOfServers: localhost:9000
     ServerListRefreshInterval: 15000

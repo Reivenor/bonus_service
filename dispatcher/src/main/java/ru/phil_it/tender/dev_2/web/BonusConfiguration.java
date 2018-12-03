@@ -9,7 +9,7 @@ import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.PingUrl;
 import com.netflix.loadbalancer.AvailabilityFilteringRule;
 
-public class DispatcherControllerConfiguration {
+public class BonusConfiguration {
 
     @Autowired
     IClientConfig ribbonClientConfig;
