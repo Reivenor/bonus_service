@@ -3,6 +3,7 @@ package ru.phil_it.tender.dev_2.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.phil_it.tender.dev_2.domain.BillRepository;
 import ru.phil_it.tender.dev_2.domain.ClientRepository;
 import ru.phil_it.tender.dev_2.domain.dto.Balance;
@@ -31,12 +32,13 @@ public class BonusControlService {
         this.clientRepository = clientRepository;
     }
 
+    @Transactional(readOnly = true)
     public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound {
         AtomicLong billPositionsSum = new AtomicLong(0L);
 
         Client client =  clientRepository.findById(newBill.getCardId())
                 .orElseThrow(() -> new CardNumberNotFound(newBill.getCardId(), log));
-        log.info("Current client stats " + client.getId() + ": balance " + client.getBalance());
+        //log.info("Current client stats " + client.getId() + ": balance " + client.getBalance());
         Bill billToSave = Bill.builder()
                 .Id(newBill.getBillId())
                 .client(clientRepository.getOne(newBill.getCardId()))
@@ -50,14 +52,14 @@ public class BonusControlService {
                 .build();
 
         billRepository.save(billToSave);
-        log.info("New bill saved");
+       // log.info("New bill saved");
         //TODO experimental
         Long pointsToRemove = (billPositionsSum.get() - billToSave.getSum()) / 10;
-        log.info("Removed points count " + pointsToRemove);
+       // log.info("Removed points count " + pointsToRemove);
         client.setBalance(client.getBalance() - pointsToRemove);
-        log.info("Current client balance " + client.getBalance());
+        //log.info("Current client balance " + client.getBalance());
         client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
-        log.info("Client " + client.getId() + " balance " + client.getBalance());
+        //log.info("Client " + client.getId() + " balance " + client.getBalance());
         clientRepository.save(client);
 
         return client;
