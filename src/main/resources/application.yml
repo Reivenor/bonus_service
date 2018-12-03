@@ -1,3 +1,8 @@
+logging:
+  level:
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -12,3 +17,9 @@ spring:
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8080
+  tomcat:
+    max-threads: 2000
+
+
