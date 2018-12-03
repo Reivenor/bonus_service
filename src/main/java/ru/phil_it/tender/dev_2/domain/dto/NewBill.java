@@ -1,5 +1,6 @@
 package ru.phil_it.tender.dev_2.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * Created by gennady on 28/11/18.
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class NewBill implements Serializable{
     private Integer cardId;

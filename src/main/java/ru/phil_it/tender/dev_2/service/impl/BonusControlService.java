@@ -31,12 +31,12 @@ public class BonusControlService {
         this.clientRepository = clientRepository;
     }
 
-    public void correctBonusPoints(NewBill newBill) throws CardNumberNotFound {
+    public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound {
         AtomicLong billPositionsSum = new AtomicLong(0L);
 
         Client client =  clientRepository.findById(newBill.getCardId())
                 .orElseThrow(() -> new CardNumberNotFound(newBill.getCardId(), log));
-
+        log.info("Current client stats " + client.getId() + ": balance " + client.getBalance());
         Bill billToSave = Bill.builder()
                 .Id(newBill.getBillId())
                 .client(clientRepository.getOne(newBill.getCardId()))
@@ -52,13 +52,15 @@ public class BonusControlService {
         billRepository.save(billToSave);
         log.info("New bill saved");
         //TODO experimental
-        Long pointsToRemove = billPositionsSum.get() - billToSave.getSum() / 10;
+        Long pointsToRemove = (billPositionsSum.get() - billToSave.getSum()) / 10;
         log.info("Removed points count " + pointsToRemove);
         client.setBalance(client.getBalance() - pointsToRemove);
         log.info("Current client balance " + client.getBalance());
         client.setBalance(client.getBalance() + computeBonusPointsBySum(sumClientBills(client)));
         log.info("Client " + client.getId() + " balance " + client.getBalance());
         clientRepository.save(client);
+
+        return client;
 
     }
 
