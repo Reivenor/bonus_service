@@ -3,7 +3,7 @@ package ru.phil_it.tender.dev_2.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 import ru.phil_it.tender.dev_2.domain.BillRepository;
 import ru.phil_it.tender.dev_2.domain.ClientRepository;
 import ru.phil_it.tender.dev_2.domain.dto.Balance;
@@ -37,7 +37,7 @@ public class BonusControlService {
         this.clientRepository = clientRepository;
     }
 
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound, NegativeBalance, BillAlreadyExists, BillSum {
         AtomicLong billPositionsSum = new AtomicLong(0L);
 
