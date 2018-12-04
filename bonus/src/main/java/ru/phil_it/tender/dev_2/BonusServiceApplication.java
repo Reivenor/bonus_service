@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableTransactionManagement
+//@EnableTransactionManagement
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
 public class BonusServiceApplication {
@@ -15,18 +15,4 @@ public class BonusServiceApplication {
 		SpringApplication.run(BonusServiceApplication.class, args);
 	}
 
-/*    @Bean
-	public JettyServletWebServerFactory jettyServletWebServerFactory(){
-	     JettyServletWebServerFactory factory = new JettyServletWebServerFactory();
-	     factory.setPort(8080);
-	     factory.addServerCustomizers(
-                 (Server server) -> {
-                     final QueuedThreadPool threadPool = server.getBean(QueuedThreadPool.class);
-                     //threadPool.setMinThreads(100);
-                     threadPool.setMaxThreads(50);
-                     threadPool.setIdleTimeout(2);
-                 });
-
-        return factory;
-    }*/
 }

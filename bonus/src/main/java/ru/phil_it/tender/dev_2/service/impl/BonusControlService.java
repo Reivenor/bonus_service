@@ -32,7 +32,6 @@ public class BonusControlService {
         this.clientRepository = clientRepository;
     }
 
-    @Transactional(readOnly = true)
     public Client correctBonusPoints(NewBill newBill) throws CardNumberNotFound {
         AtomicLong billPositionsSum = new AtomicLong(0L);
 

@@ -11,8 +11,12 @@ import com.netflix.loadbalancer.AvailabilityFilteringRule;
 
 public class BonusConfiguration {
 
+    private final IClientConfig ribbonClientConfig;
+
     @Autowired
-    IClientConfig ribbonClientConfig;
+    public BonusConfiguration(IClientConfig ribbonClientConfig) {
+        this.ribbonClientConfig = ribbonClientConfig;
+    }
 
     @Bean
     public IPing ribbonPing(IClientConfig config) {
